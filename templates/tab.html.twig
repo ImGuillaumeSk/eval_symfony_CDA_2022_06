@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% block title %}Marques
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1 class="title text-center mt-4">Computers de la marque :
+			{{brand.nom}}</h1>
+		<table class="table">
+			<tbody>
+				{% for brand in brands %}
+					<tr>
+						<td>
+							<a href="{{ path('app_tab', {'id':brand.id}) }}">{{ brand.nom }}</a>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="3">no records found</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<div class="cards-container">
+			<div class="cards d-flex justify-content-around gap-1">
+				{% for computer in computers %}
+					<div class="card" style="width: 18rem;">
+						<img class="card-img-top" src="https://via.placeholder.com/150" alt="Card image cap">
+						<div class="card-body">
+							<h5 class="card-title">
+								{{computer.brand.nom}}
+							</h5>
+							<p class="card-text">
+								{{computer.description|raw}}
+							</p>
+							<a href="{{ path('app_computer_show', {'id': computer.id}) }}" class="btn btn-info">Voir en détail</a>
+							{% if app.user %}
+								{% if computer.isUserFav(app.user) %}
+									<a href="{{ path('app_computer_fav', {'id': computer.id}) }}" class="btn btn-danger">
+										<i class="fa-solid fa-heart"></i>
+									</a>
+								{% else %}
+									<a href="{{ path('app_computer_fav', {'id': computer.id}) }}" class="btn btn-danger">
+										<i class="fa-regular fa-heart"></i>
+									</a>
+								{% endif %}
+							{% endif %}
+						</div>
+					</div>
+				{% else %}
+					<tr>
+						<td colspan="3">no records found</td>
+					</tr>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

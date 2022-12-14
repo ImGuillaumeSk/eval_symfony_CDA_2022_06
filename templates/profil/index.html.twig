@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil
+{% endblock %}
+
+{% block body %}
+	<h1 class="title text-center mt-4">Les computers de :
+		{{app.user.username}}
+	</h1>
+
+	{% if app.user %}
+		<div class="cards-container d-flex justify-content-around flex-wrap gap-1">
+			{% for computer in computers %}
+				<div class="card" style="width: 18rem;">
+					<img class="card-img-top" src="https://via.placeholder.com/150" alt="Card image cap">
+					<div class="card-body">
+						<h5 class="card-title">
+							{{computer.modele}}
+						</h5>
+						<p class="card-text">
+							{{computer.description|raw}}
+						</p>
+						<a href="{{ path('app_computer_show', {'id': computer.id}) }}" class="btn btn-warning">Voir en détail</a>
+
+						{% if computer.isUserFav(app.user) %}
+							<a href="{{ path('app_computer_fav', {'id': computer.id}) }}" class="btn btn-danger">
+								<i class="fa-solid fa-heart"></i>
+							</a>
+						{% else %}
+							<a href="{{ path('app_computer_fav', {'id': computer.id}) }}" class="btn btn-danger">
+								<i class="fa-regular fa-heart"></i>
+							</a>
+						{% endif %}
+							{{ include('computer/_delete_form.html.twig') }}
+
+					</div>
+				</div>
+				{% else %}
+			{% endfor %}
+		</div>
+	{% endif %}
+
+	<h1 class="title text-center mt-4">Les computers favoris de :
+		{{app.user.username}}
+	</h1>
+	<div class="d-flex justify-content-around flex-wrap">
+		{% for computer in computersFav %}
+			<div class="card" style="width: 18rem;">
+				<img class="card-img-top" src="https://via.placeholder.com/150" alt="Card image cap">
+				<div class="card-body">
+					<h5 class="card-title">
+						{{computer.computers.modele}}
+					</h5>
+					<p class="card-text">
+						{{computer.computers.description|raw}}
+					</p>
+					<a href="{{ path('app_computer_show', {'id': computer.computers.id}) }}" class="btn btn-info">Voir en détail</a>
+
+					{% if app.user %}
+						{% if computer.computers.isUserFav(app.user) %}
+							<a href="{{ path('app_computer_fav', {'id': computer.computers.id}) }}" class="btn btn-danger">
+								<i class="fa-solid fa-heart"></i>
+							</a>
+						{% else %}
+							<a href="{{ path('app_computer_fav', {'id': computer.computers.id}) }}" class="btn btn-danger">
+								<i class="fa-regular fa-heart"></i>
+							</a>
+						{% endif %}
+
+					{% endif %}
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil
+{% endblock %}
+
+{% block body %}
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Trouvez l'ordinateur de vos rêves</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for brand in brands %}
+				<tr>
+					<td>
+						<a href="{{ path('app_tab',{'id':brand.id}) }}">{{ brand.nom }}</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="3">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% if app.user %}
+		<div class="text-center mt-3">
+			<a href="{{ path('app_computer_new') }}" class="btn btn-success">Ajouter un nouveau computer</a>
+		</div>
+	{% endif %}
+
+	{% if is_granted('ROLE_ADMIN') %}
+		<div class="text-center mt-3">
+			<a class="btn btn-warning" href="{{ path('app_computer_index')}}">Liste des computers</a>
+			<a class="btn btn-warning" href="{{ path('app_brand_index')}}">Liste des marques</a>
+		</div>
+	{% endif %}
+	<div class="cards-container d-flex justify-content-around flex-wrap gap-1">
+		{% for computer in computers %}
+			<div
+				class="card" style="width: 18rem; gap-1">
+				<img src="https://via.placeholder.com/150" class="card-img-top" alt="placeholder">
+				<div class="card-body">
+					<h5 class="card-title">{{ computer.modele }}</h5>
+					<p class="card-text">{{ computer.description|raw }}</p>
+					<p class="card-text">{{ computer.prix }}</p>
+					<a href="{{ path('app_computer_show', {'id': computer.id}) }}" class="btn btn-info">Voir en détail</a>
+
+					{% if app.user %}
+						{% if computer.isUserFav(app.user) %}
+							<a href="{{ path('app_computer_fav', {'id': computer.id}) }}" class="btn btn-danger">
+								<i class="fa-solid fa-heart"></i>
+							</a>
+						{% else %}
+							<a href="{{ path('app_computer_fav', {'id': computer.id}) }}" class="btn btn-danger">
+								<i class="fa-regular fa-heart"></i>
+							</a>
+						{% endif %}
+					{% endif %}
+
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}
